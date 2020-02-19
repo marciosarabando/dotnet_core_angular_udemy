@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProAgil.API.Data;
+using ProAgil.Repository;
 
 namespace ProAgil.API
 {
@@ -30,6 +30,8 @@ namespace ProAgil.API
             services.AddDbContext<DataContext>(
                     x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
                     );
+
+            services.AddScoped<IProAgilRepositoty, ProAgilRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -52,6 +54,10 @@ namespace ProAgil.API
             //app.UseHttpsRedirection();
             //CONFIGURANDO A PERMISSÃO DE REQUISIÇÃO CRUZADA DA API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            //PERMITE A API ENCONTRAR IMAGENS NO SERVIDOR
+            app.UseStaticFiles();
+
             app.UseMvc();
         }
     }
